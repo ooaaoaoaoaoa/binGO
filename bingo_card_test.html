@@ -193,11 +193,10 @@
             if (pattern.every((index) => board[index])) {
                  const lineKey = pattern.join('-');
                  drawBingoLine(pattern, cells);
-                 drawnLines.add(lineKey);
+                  drawnLines.add(lineKey);
             }
         }
     }
-
 
 function drawBingoLine(pattern, cells) {
     const board = document.getElementById('bingo-board');
@@ -207,9 +206,9 @@ function drawBingoLine(pattern, cells) {
     let endCell = cells[pattern[4]];
 
     if (pattern[0] % 5 === pattern[1] % 5) {
-        direction = 'vertical';
+         direction = 'vertical';
     } else if ((pattern[0] === 0 && pattern[1] === 6) || (pattern[0] === 4 && pattern[1] === 8)) {
-        direction = 'diagonal';
+         direction = 'diagonal';
         angle = pattern[0] === 0 ? 45 : -45;
     }
 
@@ -220,40 +219,47 @@ function drawBingoLine(pattern, cells) {
     let endRect = endCell.getBoundingClientRect();
     let width = Math.abs(endRect.left - startRect.left) + endRect.width;
     let height = Math.abs(endRect.top - startRect.top) + endRect.height;
+    let startX = startRect.left - rect.left;
+    let startY = startRect.top - rect.top;
+     let endX = endRect.left - rect.left;
+     let endY = endRect.top - rect.top;
 
-    if (direction === 'vertical') {
-        line.style.width = '4px';
-        line.style.height = height + 'px';
-        line.style.top = startRect.top - rect.top + 'px';
-        line.style.left = startRect.left - rect.left + (startRect.width / 2) + 'px';
+
+   if (direction === 'vertical') {
+       line.style.width = '4px';
+         line.style.height = height + 'px';
+        line.style.top = startY + 'px';
+        line.style.left = startX + (startRect.width / 2) + 'px';
     } else if (direction === 'horizontal') {
-        line.style.width = width + 'px';
-        line.style.height = '4px';
-        line.style.top = startRect.top - rect.top + (startRect.height / 2) + 'px';
-        line.style.left = startRect.left - rect.left + 'px';
-    } else if (direction === 'diagonal') {
-          line.style.width = width + 'px';
+         line.style.width = width + 'px';
           line.style.height = '4px';
-            if (angle === 45) {
-                 line.style.top = startRect.top - rect.top + (startRect.height / 2) + 'px';
-                 line.style.left =  startRect.left - rect.left + 'px';
-             } else {
-                line.style.top = endRect.top - rect.top + (endRect.height / 2) + 'px';
-                line.style.left = startRect.left - rect.left + 'px';
-            }
-          line.style.transform = `rotate(${angle}deg)`;
-   }
+          line.style.top = startY + (startRect.height / 2) + 'px';
+          line.style.left =  startX + 'px';
+   } else if (direction === 'diagonal') {
+         line.style.width = width + 'px';
+           line.style.height = '4px';
 
+          if(angle === 45){
+           line.style.top =  startY + (startRect.height / 2) + 'px';
+           line.style.left =  startX + 'px';
+            }else{
+               line.style.top = endY + (endRect.height / 2) + 'px';
+                line.style.left = startX  + 'px';
+           }
+        line.style.transform = `rotate(${angle}deg)`;
+   }
     board.appendChild(line);
     setTimeout(() => {
         if (direction === 'horizontal' || direction === 'vertical') {
-            line.style.width = direction === 'horizontal' ? width + 'px' : '4px';
+           line.style.width = direction === 'horizontal' ? width + 'px' : '4px';
             line.style.height = direction === 'vertical' ? height + 'px' : '4px';
         } else if (direction === 'diagonal') {
-             line.style.width = width + 'px';
-      }
+            line.style.width = width + 'px';
+       }
     }, 10);
 }
+
+
 
     function resetGame() {
         const board = document.getElementById('bingo-board');
