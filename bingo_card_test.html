@@ -32,7 +32,7 @@
             padding: 3vw;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            position: relative;
+             position: relative; /* 親要素を基準に絶対配置 */
         }
         .bingo-cell {
             width: 15vw;
@@ -44,70 +44,70 @@
             font-size: 5vw;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.2s ease;
-            position: relative;
-            -webkit-user-select: none;
-            -moz-user-select: none;
+           position: relative;
+           -webkit-user-select: none;
+           -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            border-radius: 10px;
-            font-weight: 500;
+          border-radius: 10px;
+           font-weight: 500;
         }
         .bingo-cell.selected {
             background-color: #3498db;
             transform: scale(1.1);
         }
         .bingo-cell.center {
-            background-color: #2980b9;
+           background-color: #2980b9;
             color: white;
             border-radius: 50%;
-            font-size: 0;
+           font-size: 0;
         }
         .bingo-cell.center::before {
             content: '\2605';
-            font-size: 8vw;
-            color: white;
-        }
-        .bingo-line {
+           font-size: 8vw;
+           color: white;
+       }
+       .bingo-line {
             position: absolute;
             background-color: #e74c3c;
             transition: width 0.3s ease-in-out, height 0.3s ease-in-out, transform 0.3s ease-in-out;
             pointer-events: none;
-            width: 0;
-            height: 0;
-            z-index: 10;
+          width: 0;
+           height: 0;
+           z-index: 10;
         }
-        #result {
-            text-align: center;
+       #result {
+           text-align: center;
             margin-top: 20px;
             font-size: 5vw;
             font-weight: bold;
-            display: none;
-        }
-        button {
+           display: none;
+       }
+      button {
             padding: 10px 20px;
             font-size: 4vw;
             background-color: #4caf50;
             color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+           border-radius: 5px;
+           cursor: pointer;
             margin-top: 20px;
             transition: background-color 0.3s;
             display: none;
-        }
+       }
         button:hover {
             background-color: #367c39;
         }
         @media (max-width: 600px) {
-            .bingo-cell {
-                font-size: 7vw;
+           .bingo-cell {
+              font-size: 7vw;
             }
-            #result {
-                font-size: 7vw;
-            }
+           #result {
+               font-size: 7vw;
+           }
             button {
-                font-size: 6vw;
-            }
+               font-size: 6vw;
+           }
         }
     </style>
 </head>
@@ -115,75 +115,157 @@
 <div id="bingo-container">
     <div id="bingo-board"></div>
     <div id="result"></div>
-    <div style="text-align: center;">
-        <button onclick="resetGame()">Reset</button>
-    </div>
+   <div style="text-align: center;">
+       <button onclick="resetGame()"></button>
+   </div>
 </div>
 
 <script>
-    // (Previous code remains the same until drawBingoLine function)
+    let bingoNumbers = [];
+    let drawnNumbers = [];
+    let drawnLines = new Set();
 
-    function drawBingoLine(pattern, cells) {
-        const board = document.getElementById('bingo-board');
-        const centerCell = cells[12]; // 星のセル
-        let direction = 'horizontal';
-        let angle = 0;
-        let startCell = cells[pattern[0]];
-        let endCell = cells[pattern[4]];
+    function generateBingoBoard() {
+       const board = document.getElementById('bingo-board');
+        board.innerHTML = '';
+        bingoNumbers = [];
+        drawnLines.clear();
+        const generatedNumbers = Array(5).fill(null).map(() => new Set());
 
-        if (pattern[0] % 5 === pattern[1] % 5) {
-            direction = 'vertical';
-        } else if (pattern[0] === 0 && pattern[4] === 24) {
-            // 左上から右下への対角線
-            direction = 'diagonal-down';
-            angle = 45;
-        } else if (pattern[0] === 4 && pattern[4] === 20) {
-            // 右上から左下への対角線
-            direction = 'diagonal-up';
-            angle = -45;
-        }
+        for (let i = 0; i < 25; i++) {
+           const cell = document.createElement('div');
+          cell.classList.add('bingo-cell');
 
-        const line = document.createElement('div');
-        line.classList.add('bingo-line');
-        let rect = board.getBoundingClientRect();
-        let centerRect = centerCell.getBoundingClientRect();
-        let startRect = startCell.getBoundingClientRect();
-        let endRect = endCell.getBoundingClientRect();
+            if (i === 12) {
+              cell.classList.add('center');
+            } else {
+                let number;
+                let column = i % 5;
+               let min, max;
 
-        // 対角線の長さと中心点を計算
-        const centerX = centerRect.left - rect.left + (centerRect.width / 2);
-        const centerY = centerRect.top - rect.top + (centerRect.height / 2);
-        const startX = startRect.left - rect.left + (startRect.width / 2);
-        const startY = startRect.top - rect.top + (startRect.height / 2);
-        const endX = endRect.left - rect.left + (endRect.width / 2);
-        const endY = endRect.top - rect.top + (endRect.height / 2);
+                switch (column) {
+                   case 0: min = 1; max = 15; break;
+                    case 1: min = 16; max = 30; break;
+                   case 2: min = 31; max = 45; break;
+                   case 3: min = 46; max = 60; break;
+                    case 4: min = 61; max = 75; break;
+                }
 
-        // 対角線の長さを正確に計算
-        const diagonalLength = Math.sqrt(
-            Math.pow(endX - startX, 2) + 
-            Math.pow(endY - startY, 2)
-        );
+                do {
+                   number = Math.floor(Math.random() * (max - min + 1)) + min;
+                } while (generatedNumbers[column].has(number));
 
-        if (direction === 'diagonal-down' || direction === 'diagonal-up') {
-            line.style.width = diagonalLength + 'px';
-            line.style.height = '4px';
-            
-            line.style.top = centerY + 'px';
-            line.style.left = centerX + 'px';
-            line.style.transform = `rotate(${angle}deg)`;
-        }
-
-        board.appendChild(line);
-        
-        // アニメーション用のタイムアウト
-        setTimeout(() => {
-            if (direction === 'diagonal-down' || direction === 'diagonal-up') {
-                line.style.width = diagonalLength + 'px';
+                generatedNumbers[column].add(number);
+               bingoNumbers.push(number);
+                cell.textContent = number;
             }
-        }, 10);
+            cell.addEventListener('click', () => toggleCell(cell));
+            board.appendChild(cell);
+       }
+   }
+    function toggleCell(cell) {
+       if (!cell.classList.contains('center')) {
+            cell.classList.toggle('selected');
+            checkBingo();
+       }
     }
 
-    // (Remaining code stays the same)
+   function checkBingo() {
+      const cells = document.querySelectorAll('.bingo-cell');
+        const board = Array.from(cells).map(cell => cell.classList.contains('selected') || cell.classList.contains('center'));
+
+       const winPatterns = [
+            // 横線
+           [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14],
+            [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+            // 縦線
+           [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22],
+            [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+            // 対角線
+            [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+       ];
+
+        const boardElement = document.getElementById('bingo-board');
+        boardElement.querySelectorAll('.bingo-line').forEach(line => line.remove());
+        drawnLines.clear();
+
+       for (let pattern of winPatterns) {
+            if (pattern.every((index) => board[index])) {
+                const lineKey = pattern.join('-');
+               drawBingoLine(pattern, cells);
+               drawnLines.add(lineKey);
+           }
+        }
+    }
+   function drawBingoLine(pattern, cells) {
+        const board = document.getElementById('bingo-board');
+       let direction = 'horizontal';
+        let angle = 0;
+         let startCell = cells[pattern[0]];
+       let endCell = cells[pattern[4]];
+      if (pattern[0] % 5 === pattern[1] % 5) {
+            direction = 'vertical';
+       } else if ((pattern[0] === 0 && pattern[1] === 6) || (pattern[0] === 4 && pattern[1] === 8)) {
+           direction = 'diagonal';
+           angle = pattern[0] === 0 ? 45 : -45;
+      }
+     const line = document.createElement('div');
+        line.classList.add('bingo-line');
+       let rect = board.getBoundingClientRect();
+        let startRect = startCell.getBoundingClientRect();
+        let endRect = endCell.getBoundingClientRect();
+      let width = Math.abs(endRect.left - startRect.left) + endRect.width;
+        let height = Math.abs(endRect.top - startRect.top) + endRect.height;
+     let centerCell = cells[12];
+      let centerRect = centerCell.getBoundingClientRect();
+
+       if (direction === 'vertical') {
+            line.style.width = '4px';
+           line.style.height = height + 'px';
+           line.style.top = startRect.top - rect.top + 'px';
+           line.style.left = startRect.left - rect.left + (startRect.width / 2) + 'px';
+        } else if (direction === 'horizontal') {
+            line.style.width = width + 'px';
+            line.style.height = '4px';
+          line.style.top = startRect.top - rect.top + (startRect.height / 2) + 'px';
+             line.style.left =  startRect.left - rect.left  + 'px';
+        } else if (direction === 'diagonal') {
+           const centerX = centerRect.left - rect.left + centerRect.width / 2;
+          const centerY = centerRect.top - rect.top + centerRect.height / 2;
+
+           const startX = startRect.left - rect.left + startRect.width/2;
+           const startY = startRect.top - rect.top + startRect.height/2;
+
+            const endX = endRect.left - rect.left + endRect.width/2;
+           const endY = endRect.top - rect.top + endRect.height/2;
+            const hypotenuse = Math.sqrt(width**2 + height**2);
+          line.style.width = hypotenuse + 'px';
+          line.style.height = '4px';
+            line.style.top = centerY + 'px';
+           line.style.left = centerX  - (hypotenuse/2) + 'px';
+          line.style.transform = `rotate(${angle}deg)`;
+
+           if(angle === -45){
+              line.style.left = centerX  - (hypotenuse/2) + 'px';
+            }
+        }
+         board.appendChild(line);
+      setTimeout(() => {
+            if (direction === 'horizontal' || direction === 'vertical') {
+                 line.style.width =  direction === 'horizontal' ? width + 'px' : '4px';
+                 line.style.height =  direction === 'vertical' ? height + 'px' : '4px';
+            } else if (direction === 'diagonal') {
+                 line.style.width = hypotenuse + 'px';
+           }
+        }, 10)
+    }
+    function resetGame() {
+       const board = document.getElementById('bingo-board');
+        board.querySelectorAll('.bingo-line').forEach(line => line.remove());
+       generateBingoBoard();
+    }
+    // ページ読み込み時に初期化
+    generateBingoBoard();
 </script>
 </body>
 </html>
