@@ -56,13 +56,13 @@
         }
         @media (max-width: 600px) {
            .bingo-cell {
-              font-size: 5vw;
+              font-size: 10vw;
             }
             #result {
-                font-size: 5vw;
+                font-size: 12vw;
             }
             button {
-               font-size: 4vw;
+               font-size: 8vw;
             }
         }
     </style>
@@ -91,7 +91,7 @@
           cell.classList.add('bingo-cell');
         
           if (i === 12) {
-            cell.textContent = 'FREE';
+            cell.textContent = '';
             cell.classList.add('center');
           } else {
               let number;
