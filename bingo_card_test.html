@@ -75,6 +75,7 @@
             cursor: pointer;
              margin-top: 20px;
              transition: background-color 0.3s;
+             display: none;
         }
         button:hover {
            background-color: #367c39;
@@ -97,7 +98,7 @@
       <div id="bingo-board"></div>
        <div id="result"></div>
        <div style="text-align: center;">
-          <button onclick="resetGame()">ゲームをリセット</button>
+          <button onclick="resetGame()"></button>
       </div>
     </div>
 <script>
@@ -115,8 +116,26 @@
           cell.classList.add('bingo-cell');
         
           if (i === 12) {
-            cell.textContent = 'FREE';
-            cell.classList.add('center');
+             cell.classList.add('center');
+           let number;
+              let column = i % 5; // B列からO列まで順番に割り当てる
+              let min, max;
+
+              switch (column) {
+                  case 0: min = 1; max = 15; break;  // B
+                  case 1: min = 16; max = 30; break; // I
+                  case 2: min = 31; max = 45; break; // N
+                  case 3: min = 46; max = 60; break; // G
+                  case 4: min = 61; max = 75; break; // O
+              }
+
+              do {
+                  number = Math.floor(Math.random() * (max - min + 1)) + min;
+              } while (generatedNumbers[column].has(number));
+
+              generatedNumbers[column].add(number);
+              bingoNumbers.push(number);
+              cell.textContent = number;
           } else {
             let number;
             let column = i % 5; // B列からO列まで順番に割り当てる
