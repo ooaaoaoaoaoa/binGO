@@ -4,172 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bingo Number Tracker</title>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            height: 100vh;
-            color: #495057;
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-
-        .current-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #fff;
-            padding: 20px;
-            border-right: 1px solid #e0e0e0;
-        }
-
-        .history-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: #f9f9f9;
-            padding: 20px;
-        }
-
-        h1, .history-title {
-            color: #343a40;
-            font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 2.2rem;
-            text-align: center;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        #currentNumberDisplay {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #currentNumber {
-            font-size: 250px;
-            font-weight: 900;
-            color: #28a745;
-            margin: 10px 0 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease-in-out;
-            transform-origin: center;
-        }
-
-        #currentNumber.animate {
-            animation: scaleNumber 0.3s ease-in-out;
-        }
-
-        @keyframes scaleNumber {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                background-color: #f0f2f5;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                height: 100vh;
+                color: #495057;
+            }
         
-        #previousNumber {
-            font-size: 30px;
-            color: #555;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        #controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        button {
-            font-size: 16px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        button:active {
-            transform: translateY(1px);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-       #drawnNumbers {
-           display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            gap: 12px;
-            max-height: 600px; /* 高さをもっと大きく */
-            overflow-y: auto;
-            width: 100%;
-            padding: 10px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .drawn-number, .undrawn-number {
-            border: 1px solid #d8dee4;
-             padding: 14px 18px;
-            border-radius: 50%;
-            font-weight: 600;
-            color: #2c3e50;
-            transition: all 0.2s ease;
-            text-align: center;
-            display: inline-block;
-            background-color: #fff;
-            line-height: 1;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            font-size: 18px;
-            margin: 2px; /* 円の間隔を調整 */
-        }
-
-        .undrawn-number {
-            color: #868e96;
-        }
-
-        .drawn-number {
-            background-color: #bcead5; /* 背景色を少し淡く */
-            color: white;
-        }
-
-
-        @media (max-width: 768px) {
             .container {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
+        
+            .current-section {
+                flex: 1;
+                display: flex;
                 flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: #fff;
+                padding: 20px;
+                border-right: 1px solid #e0e0e0;
             }
-
+        
+            .history-section {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: #f9f9f9;
+                padding: 20px;
+            }
+        
+            h1, .history-title {
+                color: #343a40;
+                font-weight: 700;
+                margin-bottom: 20px;
+                font-size: 2.2rem;
+                text-align: center;
+                font-family: 'Montserrat', sans-serif;
+            }
+        
+            #currentNumberDisplay {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        
             #currentNumber {
-                font-size: 120px;
+                font-size: 250px;
+                font-weight: 900;
+                color: #28a745;
+                margin: 10px 0 0;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+                transition: all 0.2s ease-in-out;
+                transform-origin: center;
             }
-
+        
+            #currentNumber.animate {
+                animation: scaleNumber 0.3s ease-in-out;
+            }
+        
+            @keyframes scaleNumber {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+        
+            #previousNumber {
+                font-size: 30px;
+                color: #555;
+                margin-bottom: 15px;
+                font-weight: 600;
+            }
+        
+            #controls {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-top: 20px;
+            }
+        
+            button {
+                font-size: 16px;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 6px;
+                background-color: #007bff;
+                color: white;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        
+            button:hover {
+                background-color: #0056b3;
+            }
+        
+            button:active {
+                transform: translateY(1px);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+        
             #drawnNumbers {
-                grid-template-columns: repeat(5, 1fr);
+                display: grid;
+                grid-template-columns: repeat(10, 1fr);
+                gap: 12px;
+                max-height: 600px;
+                overflow-y: auto;
+                width: 100%;
+                padding: 10px;
+                justify-content: center;
+                margin-top: 20px;
             }
-        }
-
-        @media (max-width: 480px) {
-            #drawnNumbers {
-                grid-template-columns: repeat(3, 1fr);
+        
+            .drawn-number, .undrawn-number {
+                border: 1px solid #d8dee4;
+                padding: 14px 18px;
+                border-radius: 50%;
+                font-weight: 600;
+                transition: all 0.2s ease;
+                text-align: center;
+                display: inline-block;
+                background-color: #fff;
+                line-height: 1;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+                font-size: 18px;
+                margin: 2px;
             }
-        }
-    </style>
+        
+            .undrawn-number {
+                color: #555; /* 未引きの数字を濃く */
+            }
+        
+            .drawn-number {
+                background-color: #bcead5; /* 背景色を少し淡く */
+                color: black; /* 引かれた数字を黒く */
+            }
+        
+        
+            @media (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                }
+        
+                #currentNumber {
+                    font-size: 120px;
+                }
+        
+                #drawnNumbers {
+                    grid-template-columns: repeat(5, 1fr);
+                }
+            }
+        
+            @media (max-width: 480px) {
+                #drawnNumbers {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            }
+        </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
