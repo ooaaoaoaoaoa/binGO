@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Number Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f4f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .current-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-right: 2px solid #ddd;
+        }
+
+        .history-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f4f8;
+            padding: 20px;
+        }
+
+        h1, .history-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        #currentNumber {
+            font-size: 250px;
+            font-weight: bold;
+            color: #2980b9;
+            margin: 30px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 7px rgba(0,0,0,0.12);
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #drawnNumbers {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            width: 100%;
+            padding: 10px;
+            justify-content: center;
+        }
+
+        .drawn-number, .undrawn-number {
+            border: 1px solid #bdc3c7;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.2s ease;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .undrawn-number {
+            background-color: white;
+            color: #7f8c8d;
+        }
+
+        .drawn-number {
+            background-color: #3498db;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            #currentNumber {
+                font-size: 120px;
+            }
+
+            #drawnNumbers {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="current-section">
+            <h1>現在の数字</h1>
+            <div id="currentNumber">-</div>
+            
+            <div id="controls">
+                <button onclick="drawNumber()">数字を引く</button>
+                <button onclick="resetGame()">リセット</button>
+            </div>
+        </div>
+        
+        <div class="history-section">
+            <h3 class="history-title">すべての数字</h3>
+            <div id="drawnNumbers"></div>
+        </div>
+    </div>
+
+    <script>
+        let remainingNumbers = [];
+        let drawnNumbers = [];
+        let allNumbers = [];
+
+        // ゲームの初期化
+        function initializeGame() {
+            remainingNumbers = Array.from({length: 75}, (_, i) => i + 1);
+            allNumbers = Array.from({length: 75}, (_, i) => i + 1);
+            drawnNumbers = [];
+            document.getElementById('drawnNumbers').innerHTML = allNumbers.map(num => 
+                `<span class="undrawn-number">${num}</span>`
+            ).join('');
+            document.getElementById('currentNumber').textContent = '-';
+        }
+
+        // 数字を引く
+        function drawNumber() {
+            if (remainingNumbers.length === 0) {
+                alert('全ての数字が引かれました！');
+                return;
+            }
+
+            // ランダムにインデックスを選択
+            const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+            const drawnNumber = remainingNumbers[randomIndex];
+
+            // 現在の数字を大きく表示
+            document.getElementById('currentNumber').textContent = drawnNumber;
+
+            // 引かれた数字を追加（降順でソート）
+            drawnNumbers.push(drawnNumber);
+            drawnNumbers.sort((a, b) => b - a);
+
+            // すべての数字の表示を更新（引かれた数字は青、未引きは白）
+            const drawnNumbersContainer = document.getElementById('drawnNumbers');
+            drawnNumbersContainer.innerHTML = allNumbers.map(num => 
+                drawnNumbers.includes(num) 
+                ? `<span class="drawn-number">${num}</span>` 
+                : `<span class="undrawn-number">${num}</span>`
+            ).join('');
+
+            // 残りの数字から削除
+            remainingNumbers = remainingNumbers.filter(number => number !== drawnNumber);
+        }
+
+        // ゲームをリセット
+        function resetGame() {
+            initializeGame();
+        }
+
+        // ページ読み込み時にゲームを初期化
+        initializeGame();
+    </script>
+</body>
+</html>
