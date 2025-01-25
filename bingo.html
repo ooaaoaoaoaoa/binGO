@@ -4,171 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bingo Number Tracker</title>
-        <style>
-            body {
-                font-family: 'Roboto', sans-serif;
-                background-color: #f0f2f5;
-                margin: 0;
-                padding: 0;
-                display: flex;
-                height: 100vh;
-                color: #495057;
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            color: #495057;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .current-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .history-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        h1, .history-title {
+            color: #343a40;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        #currentNumberDisplay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #currentNumber {
+            font-size: 250px;
+            font-weight: 900;
+            color: #28a745;
+            margin: 10px 0 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease-in-out;
+            transform-origin: center;
+        }
+
+        #currentNumber.animate {
+            animation: scaleNumber 0.3s ease-in-out;
+        }
+
+        @keyframes scaleNumber {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #previousNumber {
+            font-size: 30px;
+            color: #555;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #drawnNumbers {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 12px;
+            max-height: 600px;
+            overflow-y: auto;
+            width: 100%;
+            padding: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .drawn-number, .undrawn-number {
+            border: 1px solid #d8dee4;
+            padding: 14px 18px;
+            border-radius: 50%;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-align: center;
+            display: inline-block;
+            background-color: #fff;
+            line-height: 1;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            font-size: 18px;
+            margin: 2px;
+        }
+
+        .undrawn-number {
+            color: #555;
+        }
+
+        .drawn-number {
+            background-color: #81c784;
+            color: black;
+        }
+          #currentNumber.roulette {
+            animation: rouletteAnimation 1.5s ease-in-out;
+          }
+
+           @keyframes rouletteAnimation {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(10px); }
+            40% { transform: translateX(-10px); }
+            60% { transform: translateX(5px); }
+            80% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
             }
-        
+
+
+        @media (max-width: 768px) {
             .container {
-                display: flex;
-                width: 100%;
-                height: 100%;
-            }
-        
-            .current-section {
-                flex: 1;
-                display: flex;
                 flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                background-color: #fff;
-                padding: 20px;
-                border-right: 1px solid #e0e0e0;
             }
-        
-            .history-section {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                background-color: #f9f9f9;
-                padding: 20px;
-            }
-        
-            h1, .history-title {
-                color: #343a40;
-                font-weight: 700;
-                margin-bottom: 20px;
-                font-size: 2.2rem;
-                text-align: center;
-                font-family: 'Montserrat', sans-serif;
-            }
-        
-            #currentNumberDisplay {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-        
+
             #currentNumber {
-                font-size: 250px;
-                font-weight: 900;
-                color: #28a745;
-                margin: 10px 0 0;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
-                transition: all 0.2s ease-in-out;
-                transform-origin: center;
+                font-size: 120px;
             }
-        
-            #currentNumber.animate {
-                animation: scaleNumber 0.3s ease-in-out;
-            }
-        
-            @keyframes scaleNumber {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
-            }
-        
-            #previousNumber {
-                font-size: 30px;
-                color: #555;
-                margin-bottom: 15px;
-                font-weight: 600;
-            }
-        
-            #controls {
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-                margin-top: 20px;
-            }
-        
-            button {
-                font-size: 16px;
-                padding: 12px 20px;
-                border: none;
-                border-radius: 6px;
-                background-color: #007bff;
-                color: white;
-                cursor: pointer;
-                transition: background-color 0.3s ease;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-        
-            button:hover {
-                background-color: #0056b3;
-            }
-        
-            button:active {
-                transform: translateY(1px);
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            }
-        
+
             #drawnNumbers {
-                display: grid;
-                grid-template-columns: repeat(10, 1fr);
-                gap: 12px;
-                max-height: 600px;
-                overflow-y: auto;
-                width: 100%;
-                padding: 10px;
-                justify-content: center;
-                margin-top: 20px;
+                grid-template-columns: repeat(5, 1fr);
             }
-        
-            .drawn-number, .undrawn-number {
-                border: 1px solid #d8dee4;
-                padding: 14px 18px;
-                border-radius: 50%;
-                font-weight: 600;
-                transition: all 0.2s ease;
-                text-align: center;
-                display: inline-block;
-                background-color: #fff;
-                line-height: 1;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-                font-size: 18px;
-                margin: 2px;
+        }
+
+        @media (max-width: 480px) {
+            #drawnNumbers {
+                grid-template-columns: repeat(3, 1fr);
             }
-        
-            .undrawn-number {
-                color: #555; /* 未引きの数字を濃く */
-            }
-        
-            .drawn-number {
-                background-color: #60f2b0; /* 背景色を少し淡く */
-                color: black; /* 引かれた数字を黒く */
-            }
-        
-        
-            @media (max-width: 768px) {
-                .container {
-                    flex-direction: column;
-                }
-        
-                #currentNumber {
-                    font-size: 120px;
-                }
-        
-                #drawnNumbers {
-                    grid-template-columns: repeat(5, 1fr);
-                }
-            }
-        
-            @media (max-width: 480px) {
-                #drawnNumbers {
-                    grid-template-columns: repeat(3, 1fr);
-                }
-            }
-        </style>
+        }
+    </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -182,7 +194,6 @@
             
             <div id="controls">
                 <button onclick="drawNumber()">引く</button>
-                <!-- <button onclick="resetGame()">リセット</button> -->
             </div>
         </div>
         
@@ -199,6 +210,8 @@
         let currentNumberDisplay = document.getElementById('currentNumber');
         let previousNumberDisplay = document.getElementById('previousNumber');
         let previousNumber = null;
+        let isDrawing = false; // アニメーション中かどうかを管理するフラグ
+
 
         // ゲームの初期化
         function initializeGame() {
@@ -211,48 +224,77 @@
             currentNumberDisplay.textContent = '-';
             previousNumberDisplay.textContent = ''; // 直前の数字をリセット
             previousNumber = null;
+            isDrawing = false;
         }
 
-        // 数字を引く
-        function drawNumber() {
-            if (remainingNumbers.length === 0) {
-                alert('全ての数字が引かれました！');
-                return;
-            }
 
-            // ランダムにインデックスを選択
-            const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
-            const drawnNumber = remainingNumbers[randomIndex];
+      // 数字を引く
+        async function drawNumber() {
+        if (isDrawing) {
+            return; // アニメーション中はボタンを無視
+        }
 
-             // 直前の数字を更新
-            if (previousNumber !== null) {
-                previousNumberDisplay.textContent = `直前: ${previousNumber}`;
-            } else {
-                previousNumberDisplay.textContent = ''; // 初回は表示しない
-            }
+        if (remainingNumbers.length === 0) {
+            alert('全ての数字が引かれました！');
+            return;
+        }
+
+        isDrawing = true; // アニメーション開始
+        const drawButton = document.querySelector('#controls button');
+        drawButton.disabled = true;  // アニメーション中はボタンを無効化
+
+        currentNumberDisplay.classList.add('roulette'); // ルーレットのアニメーションを追加
+
+        let animationDuration = 1000; // アニメーションの持続時間
+        let startTime = null;
+        let finalDrawnNumber = null;
+
+        // アニメーション中に数字をランダムに変更
+        function animateNumberChange(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = timestamp - startTime;
             
-            previousNumber = drawnNumber;
-           
-            // 現在の数字を大きく表示
-            currentNumberDisplay.textContent = drawnNumber;
-            currentNumberDisplay.classList.add('animate');
-            setTimeout(() => currentNumberDisplay.classList.remove('animate'), 300);
+            // アニメーション終了前に最終的な数字を決定
+           if(progress < animationDuration) {
+               const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+               currentNumberDisplay.textContent = remainingNumbers[randomIndex]
+                requestAnimationFrame(animateNumberChange)
+            } else {
+                 // ランダムにインデックスを選択
+                const randomIndex = Math.floor(Math.random() * remainingNumbers.length);
+                finalDrawnNumber = remainingNumbers[randomIndex];
+                if (previousNumber !== null) {
+                previousNumberDisplay.textContent = `直前: ${previousNumber}`;
+                } else {
+                    previousNumberDisplay.textContent = '';
+                }
+                previousNumber = finalDrawnNumber;
 
-            // 引かれた数字を追加（降順でソート）
-            drawnNumbers.push(drawnNumber);
-            drawnNumbers.sort((a, b) => b - a);
+                 currentNumberDisplay.textContent = finalDrawnNumber;
+                 currentNumberDisplay.classList.remove('roulette');
+                  // 引かれた数字を追加（降順でソート）
+                 drawnNumbers.push(finalDrawnNumber);
+                 drawnNumbers.sort((a, b) => b - a);
 
             // すべての数字の表示を更新（引かれた数字は緑、未引きはグレー）
-            const drawnNumbersContainer = document.getElementById('drawnNumbers');
-            drawnNumbersContainer.innerHTML = allNumbers.map(num => 
-                drawnNumbers.includes(num) 
-                ? `<span class="drawn-number">${num}</span>` 
-                : `<span class="undrawn-number">${num}</span>`
-            ).join('');
+                const drawnNumbersContainer = document.getElementById('drawnNumbers');
+                drawnNumbersContainer.innerHTML = allNumbers.map(num => 
+                    drawnNumbers.includes(num) 
+                    ? `<span class="drawn-number">${num}</span>` 
+                    : `<span class="undrawn-number">${num}</span>`
+                ).join('');
 
-            // 残りの数字から削除
-            remainingNumbers = remainingNumbers.filter(number => number !== drawnNumber);
+                 // 残りの数字から削除
+               remainingNumbers = remainingNumbers.filter(number => number !== finalDrawnNumber);
+                isDrawing = false;
+                drawButton.disabled = false; // アニメーションが終わったらボタンを有効化
+            }
+           
         }
+        requestAnimationFrame(animateNumberChange);
+
+    }
+
 
         // ゲームをリセット
         function resetGame() {
